@@ -31,3 +31,10 @@ exports.isAdm = (req,res,next)=>{
     }
     return res.status(403).json({ mensagem: 'Acesso negado. Somente administradores podem acessar esta rota.' })
 }
+
+exports.isAluno = (req,res,next)=>{
+    if(req.user.role ==='aluno'){
+        return next()
+    }
+    return res.status(403).json({ mensagem: 'Acesso negado. Somente alunos podem acessar esta rota.' })
+}
