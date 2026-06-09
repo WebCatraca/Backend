@@ -4,8 +4,9 @@ const admController = require('./src/controllers/admController')
 
 const tokenMiddleware = require('./src/middlewares/authToken')
 
-route.post('/loginADM', admController.login)
-route.get('/teste', tokenMiddleware.authToken,tokenMiddleware.isAdm, admController.test)
+route.post('/adm/loginADM', admController.login)
+route.get('/adm/teste', tokenMiddleware.authToken,tokenMiddleware.isAdm, admController.test)
+route.post('/adm/cadastroAluno', tokenMiddleware.authToken, tokenMiddleware.isAdm, admController.cadastroAluno)
 
 
 

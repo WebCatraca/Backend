@@ -1,5 +1,7 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const Aluno = require('../models/aluno')
+const bcryptjs = require('bcryptjs')
 
 exports.login = async (req, res) => {
     try {
@@ -40,5 +42,29 @@ exports.login = async (req, res) => {
 
 exports.test = async(req,res)=>{
     res.send('Pega caralho')
+}
+
+
+exports.cadastroAluno = async(req, res)=>{
+    try{
+        const {nome, email, password, curso} = req.body
+
+        const passwordHash = bcryptjs.hashSync(password , 10)
+
+        const alunoExist = await Aluno.findOne({ email })
+        if(alunoExist) return res.json('email ja existe')
+        
+        const aluno = await Aluno.create({nome: nome, email:email, password: passwordHash, curso:curso})
+
+        aluno.matricula = aluno._id.toString().slice(-8);
+
+        await aluno.save();
+
+
+        return res.status(201).json({mensagem: "Aluno cadastrado com sucesso"})
+
+    }catch(err){
+        return res.json(err)
+    }
 }
 
