@@ -1,6 +1,7 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const Aluno = require('../models/aluno')
+const Log = require('../models/log');
 const bcryptjs = require('bcryptjs')
 
 exports.login = async (req, res) => {
@@ -68,3 +69,40 @@ exports.cadastroAluno = async(req, res)=>{
     }
 }
 
+
+exports.listar = async (req, res) => {
+
+    try {
+
+        const logs = await Log.find()
+            .sort({ dataHora: -1 });
+
+        return res.json(logs);
+
+    } catch (err) {
+
+        return res.status(500).json(err);
+
+    }
+
+};
+
+exports.listarAlunos = async (req, res) => {
+    try {
+
+        const alunos = await Aluno.find(
+            {},
+            "-password -__v"
+        ).sort({ nome: 1 });
+
+        return res.status(200).json(alunos);
+
+    } catch (err) {
+
+        return res.status(500).json({
+            mensagem: "Erro ao listar alunos.",
+            erro: err.message
+        });
+
+    }
+};
